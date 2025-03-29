@@ -14,25 +14,50 @@
 <!-- Setup Google Analytics -->
 
 
+<script>
+	function parseText() {
+		const inputText = document.getElementById("findings").value;
+		const outputText = "placeholder";
+		document.getElementById("impression").innerText = outputText;
+	}
+</script>
+
 </head>
 
 <body>
+<div class="container">
 
 <header>
-<div class="container">
-<a id="a-title" href="https://fqjin.github.io/tirads/">
-<h1>TI-RADS Impressionizer</h1>
-</a>
-<h2>A tool to generate impressions from TI-RADS findings.</h2>
-</div>
+	<div id="logo">
+	<img src="https://edge.sitecorecloud.io/americancoldf5f-acrorgf92a-productioncb02-3650/media/ACR/Images/Logos/1x1/RADS/ACR-TI-RADS.png" alt="Thyroid logo" width=100px height=100px>
+	</div>
+	<a id="a-title" href="https://fqjin.github.io/tirads/">
+	<h1>TI-RADS Impressionizer</h1>
+	</a>
+	<h2>A tool to generate impressions from TI-RADS findings.</h2>
 </header>
 
-<div class="container">
 <section id="main_content">
-<h1 id="tirads">tirads</h1>
-<p>Generate impression from TI-RADS findings</p>
+    <p>Paste findings below:</p>
+	<textarea id="findings" placeholder="TI-RADS findings" rows=15 cols=64></textarea>
+	<br>
+	<button type="button" class="btn" onclick=parseText()>Convert</button>
+	<p>Generated impression:</p>
+	<div id="impression"></div>
+	<br>
+	<br>
 </section>
-</div>
 
+<footer>
+    <p>
+	The information provided on this site is intended for educational and informational purposes only and does not constitute providing medical advice or professional services.
+    No material on this site is intended to be a substitute for professional medical advice, diagnosis or treatment.
+	For questions or comments, please contact Felix Jin. 
+	<a href="https://github.com/fqjin/tirads">Source</a>
+    </p>
+</footer>
+
+</div>
 </body>
+
 </html>
