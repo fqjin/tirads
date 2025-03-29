@@ -36,7 +36,7 @@ function parseText() {
 	const regexSize = /Size:\s*([\d.]+)\s*x\s*([\d.]+)\s*x\s*([\d.]+)\s*cm/;
 	const regexLoc = /Location:\s*(.+)(\bthyroid\b|\bisthmus\b)/;
 	const regexTIRADS = /ACR TI-RADS category: TR(\d)/;
-	const regexBiopsy = /Prior biopsy:\s*(.+)\n/;
+	const regexBiopsy = /Prior biopsy:\s*(\S.+)\n/;
 	
 	let results = [];
 	results.push("TIRADS assessment of thyroid nodules:");
@@ -44,23 +44,25 @@ function parseText() {
 		const noduleNumber = dataArray[i];
 		const noduleData = dataArray[i+1] + "\n";
 		
-		let size = "unknown";
-		let loc = "unknown";
-		let tirads = " unknown";
-		let biopsy;
-		let rec;
+		let size, loc, tirads, biopsy, rec;		
 		
 		match = regexSize.exec(noduleData);
 		if (match) {
 			size = match.slice(1).sort((a, b) => Number(a) - Number(b)).slice(-1);
+		} else {
+			size = "unknown";
 		}
 		match = regexLoc.exec(noduleData);
 		if (match) {
 			loc = match.slice(1).join("");
+		} else {
+			loc = "unknown location";
 		}
 		match = regexTIRADS.exec(noduleData);
 		if (match) {
 			tirads = match[1];
+		} else {
+			tirads = " unknown";
 		}
 		match = regexBiopsy.exec(noduleData);
 		if (match) {
@@ -72,7 +74,10 @@ function parseText() {
 			} else {
 				rec = `previously biopsied ${biopsy}. Follow up as clinically indicated`;
 			}
+		} else {
+			rec = "unknown biopsy";
 		}
+		
 		results.push(`Nodule ${noduleNumber}, ${loc}: ACR TI-RADS TR${tirads}. Size: ${size} cm. Recommend: ${rec}.\n`);
 	}
 
@@ -81,7 +86,59 @@ function parseText() {
 }
 
 function getRecommendation(size, tirads) {
-	return "placeholder"
+	size = parseFloat(size);
+	if (isNaN(size)) {
+		return "unknown size"
+	}
+	switch (parseInt(tirads)) {
+		case 1:
+			return "No further follow-up"
+		case 2:
+			return "No further follow-up"
+		case 3:
+			if (size < 1.5) {
+				return "No further follow-up"
+			} else if (size < 2.5) {
+				return "Follow-up ultrasound in 1 year"
+			} else {
+				return "Ultrasound-guided fine needle aspiration"
+			}
+		case 4:
+			if (size < 1.0) {
+				return "No further follow-up"
+			} else if (size < 1.5) {
+				return "Follow-up ultrasound in 1 year"
+			} else {
+				return "Ultrasound-guided fine needle aspiration"
+			}
+		case 5:
+			if (size < 0.5) {
+				return "No further follow-up"
+			} else if (size < 1.0) {
+				return "Follow-up ultrasound in 1 year"
+			} else {
+				return "Ultrasound-guided fine needle aspiration"
+			}
+	}
+	return "unknown TI-RADS"
+}
+
+function toggleTail() {
+	const tail = 
+`Other non-TIRADS findings: None
+
+---------------------------------------------------------------------------------------
+
+ACR TI-RADS recommendations
+TR5 (≥7 points) - FNA if ≥ 1cm, follow-up annually if ≥ 0.5 cm 
+TR4 (4-6 points) - FNA if ≥ 1.5 cm, follow-up at 1, 2, 3, and 5 years if ≥ 1.0 cm 
+TR3 (3 points)- FNA if ≥ 2.5cm, follow-up at 1, 3, and 5 years if ≥ 1.5 cm 
+TR2 (2 points) & TR1 (0 points) - No FNA or follow-up
+
+* ACR TI-RADS recommends that no more than two nodules with the highest ACR TI-RADS total point should be biopsied and no more than four nodules should be followed.
+
+** TI-RADS recommendations are based on TI-RADS level. Management decisions such as whether to perform FNA and whether to follow up a nodule may differ from the TI-RADS recommendation based on clinician judgement, patient preference, risk factors for thyroid cancer, comorbidities, life expectancy and other considerations.`;
+	return
 }
 </script>
 
