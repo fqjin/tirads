@@ -15,11 +15,74 @@
 
 
 <script>
-	function parseText() {
-		const inputText = document.getElementById("findings").value;
-		const outputText = "placeholder";
-		document.getElementById("impression").innerText = outputText;
+function parseText() {
+	const inputText = document.getElementById("findings").value;
+	const idxStart = inputText.search(/Nodule\s*\d:/);
+	const idxEnd = inputText.search(/Lymph Nodes:/);
+	if (idxStart == -1) {
+		document.getElementById("impression").innerText = "No nodules detected.";
+		return
 	}
+	const trimmedText = (idxEnd == -1) ?
+		inputText.substring(idxStart) : 
+		inputText.substring(idxStart, idxEnd);
+		
+	const dataArray = trimmedText.split(/Nodule\s*(\d):/).slice(1);
+	if (dataArray.length % 2 !== 0) {
+		document.getElementById("impression").innerText = "Something went wrong.";
+		return
+	}
+	
+	const regexSize = /Size:\s*([\d.]+)\s*x\s*([\d.]+)\s*x\s*([\d.]+)\s*cm/;
+	const regexLoc = /Location:\s*(.+)(\bthyroid\b|\bisthmus\b)/;
+	const regexTIRADS = /ACR TI-RADS category: TR(\d)/;
+	const regexBiopsy = /Prior biopsy:\s*(.+)\n/;
+	
+	let results = [];
+	results.push("TIRADS assessment of thyroid nodules:");
+	for (let i = 0; i < dataArray.length; i += 2) {
+		const noduleNumber = dataArray[i];
+		const noduleData = dataArray[i+1] + "\n";
+		
+		let size = "unknown";
+		let loc = "unknown";
+		let tirads = " unknown";
+		let biopsy;
+		let rec;
+		
+		match = regexSize.exec(noduleData);
+		if (match) {
+			size = match.slice(1).sort((a, b) => Number(a) - Number(b)).slice(-1);
+		}
+		match = regexLoc.exec(noduleData);
+		if (match) {
+			loc = match.slice(1).join("");
+		}
+		match = regexTIRADS.exec(noduleData);
+		if (match) {
+			tirads = match[1];
+		}
+		match = regexBiopsy.exec(noduleData);
+		if (match) {
+			biopsy = match[1];
+			if (biopsy.slice(0,2) == "no") {
+				rec = getRecommendation(size, tirads);
+			} else if (biopsy.slice(0,3) == "yes") {
+				rec = `previously biopsied ${biopsy.slice(4)}. Follow up as clinically indicated`;
+			} else {
+				rec = `previously biopsied ${biopsy}. Follow up as clinically indicated`;
+			}
+		}
+		results.push(`Nodule ${noduleNumber}, ${loc}: ACR TI-RADS TR${tirads}. Size: ${size} cm. Recommend: ${rec}.\n`);
+	}
+
+	results = results.join("\n");
+	document.getElementById("impression").innerText = results;
+}
+
+function getRecommendation(size, tirads) {
+	return "placeholder"
+}
 </script>
 
 </head>
