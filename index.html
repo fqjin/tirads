@@ -27,6 +27,7 @@ async function parseText() {
 			return
 		}
 	}
+	inputText = inputText.replace(/\r\n/g, "\n");
 	
 	const idxStart = inputText.search(/Nodule\s*\d:/);
 	const idxEnd = inputText.search(/Lymph Nodes:/);
