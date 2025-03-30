@@ -15,8 +15,19 @@
 
 
 <script>
-function parseText() {
-	const inputText = document.getElementById("findings").value;
+
+async function parseText() {
+	let inputText = document.getElementById("findings").value;
+	if (inputText == "") {
+		try {
+			inputText = await navigator.clipboard.readText();
+		} catch (err) {
+			document.getElementById("impression").innerText = `${err}`;
+			tailShown = false;
+			return
+		}
+	}
+	
 	const idxStart = inputText.search(/Nodule\s*\d:/);
 	const idxEnd = inputText.search(/Lymph Nodes:/);
 	if (idxStart == -1) {
@@ -27,7 +38,6 @@ function parseText() {
 	const trimmedText = (idxEnd == -1) ?
 		inputText.substring(idxStart) : 
 		inputText.substring(idxStart, idxEnd);
-		
 	const dataArray = trimmedText.split(/Nodule\s*(\d):/).slice(1);
 	if (dataArray.length % 2 !== 0) {
 		document.getElementById("impression").innerText = "Something went wrong.";
@@ -175,7 +185,9 @@ function toggleTail() {
 
 <section id="main_content">
     <p>Paste findings below:</p>
-	<textarea id="findings" placeholder="TI-RADS findings" rows=15 cols=64></textarea>
+	<textarea id="findings" placeholder="TI-RADS findings
+
+Leaving this textbox blank will pull from your clipboard" rows=15 cols=64></textarea>
 	<br>
 	<button type="button" class="btn" onclick=parseText()>Convert</button>
 	<button type="button" class="btn" onclick=copyToClipboard()>Copy to Clipboard</button>
