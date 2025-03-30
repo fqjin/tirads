@@ -36,7 +36,7 @@ async function parseText() {
 		return
 	}
 	const trimmedText = (idxEnd == -1) ?
-		inputText.substring(idxStart) : 
+		inputText.substring(idxStart) :
 		inputText.substring(idxStart, idxEnd);
 	const dataArray = trimmedText.split(/Nodule\s*(\d):/).slice(1);
 	if (dataArray.length % 2 !== 0) {
@@ -56,7 +56,7 @@ async function parseText() {
 		const noduleNumber = dataArray[i];
 		const noduleData = dataArray[i+1] + "\n";
 		
-		let size, loc, tirads, biopsy, rec;		
+		let size, loc, tirads, biopsy, rec;
 		
 		match = regexSize.exec(noduleData);
 		if (match) {
@@ -159,7 +159,7 @@ let tailShown = false;
 function toggleTail() {
 	let impression = document.getElementById("impression").innerText;
 	if (tailShown) {
-		document.getElementById("impression").innerText = impression.slice(0, -tail.length) 	;
+		document.getElementById("impression").innerText = impression.slice(0, -tail.length);
 		tailShown = false;
 	} else {
 		document.getElementById("impression").innerText = impression + tail;
@@ -190,10 +190,10 @@ function clearText() {
 </header>
 
 <section id="main_content">
-    <p>Paste findings below:</p>
+	<p>Paste findings below:</p>
 	<textarea id="findings" placeholder="TI-RADS findings
 
-Leaving this textbox blank will pull from your clipboard" rows=15 cols=64></textarea>
+Leaving this blank will pull from the clipboard" rows=15 cols=64></textarea>
 	<br>
 	<button type="button" class="btn" onclick=parseText()>Convert</button>
 	<button type="button" class="btn" onclick=copyToClipboard()>Copy to Clipboard</button>
@@ -206,12 +206,12 @@ Leaving this textbox blank will pull from your clipboard" rows=15 cols=64></text
 </section>
 
 <footer>
-    <p>
+	<p>
 	The information provided on this site is intended for educational and informational purposes only and does not constitute providing medical advice or professional services.
-    No material on this site is intended to be a substitute for professional medical advice, diagnosis or treatment.
-	For questions or comments, please contact Felix Jin. 
+	No material on this site is intended to be a substitute for professional medical advice, diagnosis or treatment.
+	For questions or comments, please contact Felix Jin.
 	<a href="https://github.com/fqjin/tirads">Source</a>
-    </p>
+	</p>
 </footer>
 
 </div>
