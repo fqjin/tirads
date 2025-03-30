@@ -166,6 +166,12 @@ function toggleTail() {
 		tailShown = true;
 	}
 }
+
+function clearText() {
+	document.getElementById("findings").value = "";
+	document.getElementById("impression").innerText = "";
+	tailShown = false;
+}
 </script>
 
 </head>
@@ -192,6 +198,7 @@ Leaving this textbox blank will pull from your clipboard" rows=15 cols=64></text
 	<button type="button" class="btn" onclick=parseText()>Convert</button>
 	<button type="button" class="btn" onclick=copyToClipboard()>Copy to Clipboard</button>
 	<button type="button" class="btn" onclick=toggleTail()>Toggle Footer</button>
+	<button type="button" class="btn" onclick=clearText()>Clear</button>
 	<p>Generated impression:</p>
 	<div id="impression"></div>
 	<br>
