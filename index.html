@@ -21,6 +21,7 @@ function parseText() {
 	const idxEnd = inputText.search(/Lymph Nodes:/);
 	if (idxStart == -1) {
 		document.getElementById("impression").innerText = "No nodules detected.";
+		tailShown = false;
 		return
 	}
 	const trimmedText = (idxEnd == -1) ?
@@ -30,6 +31,7 @@ function parseText() {
 	const dataArray = trimmedText.split(/Nodule\s*(\d):/).slice(1);
 	if (dataArray.length % 2 !== 0) {
 		document.getElementById("impression").innerText = "Something went wrong.";
+		tailShown = false;
 		return
 	}
 	
@@ -83,6 +85,7 @@ function parseText() {
 
 	results = results.join("\n");
 	document.getElementById("impression").innerText = results;
+	tailShown = false;
 }
 
 function getRecommendation(size, tirads) {
@@ -128,22 +131,30 @@ function copyToClipboard() {
 	navigator.clipboard.writeText(impression);
 }
 
-function toggleTail() {
-	const tail = 
-`Other non-TIRADS findings: None
+const tail = `
+Other non-TIRADS findings: None
 
 ---------------------------------------------------------------------------------------
 
 ACR TI-RADS recommendations
-TR5 (≥7 points) - FNA if ≥ 1cm, follow-up annually if ≥ 0.5 cm 
-TR4 (4-6 points) - FNA if ≥ 1.5 cm, follow-up at 1, 2, 3, and 5 years if ≥ 1.0 cm 
-TR3 (3 points)- FNA if ≥ 2.5cm, follow-up at 1, 3, and 5 years if ≥ 1.5 cm 
+TR5 (≥7 points) - FNA if ≥ 1cm, follow-up annually if ≥ 0.5 cm
+TR4 (4-6 points) - FNA if ≥ 1.5 cm, follow-up at 1, 2, 3, and 5 years if ≥ 1.0 cm
+TR3 (3 points)- FNA if ≥ 2.5cm, follow-up at 1, 3, and 5 years if ≥ 1.5 cm
 TR2 (2 points) & TR1 (0 points) - No FNA or follow-up
 
 * ACR TI-RADS recommends that no more than two nodules with the highest ACR TI-RADS total point should be biopsied and no more than four nodules should be followed.
 
 ** TI-RADS recommendations are based on TI-RADS level. Management decisions such as whether to perform FNA and whether to follow up a nodule may differ from the TI-RADS recommendation based on clinician judgement, patient preference, risk factors for thyroid cancer, comorbidities, life expectancy and other considerations.`;
-	return
+let tailShown = false;
+function toggleTail() {
+	let impression = document.getElementById("impression").innerText;
+	if (tailShown) {
+		document.getElementById("impression").innerText = impression.slice(0, -tail.length) 	;
+		tailShown = false;
+	} else {
+		document.getElementById("impression").innerText = impression + tail;
+		tailShown = true;
+	}
 }
 </script>
 
