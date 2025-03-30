@@ -123,6 +123,11 @@ function getRecommendation(size, tirads) {
 	return "unknown TI-RADS"
 }
 
+function copyToClipboard() {
+	const impression = document.getElementById("impression").innerText;
+	navigator.clipboard.writeText(impression);
+}
+
 function toggleTail() {
 	const tail = 
 `Other non-TIRADS findings: None
@@ -162,6 +167,8 @@ TR2 (2 points) & TR1 (0 points) - No FNA or follow-up
 	<textarea id="findings" placeholder="TI-RADS findings" rows=15 cols=64></textarea>
 	<br>
 	<button type="button" class="btn" onclick=parseText()>Convert</button>
+	<button type="button" class="btn" onclick=copyToClipboard()>Copy to Clipboard</button>
+	<button type="button" class="btn" onclick=toggleTail()>Toggle Footer</button>
 	<p>Generated impression:</p>
 	<div id="impression"></div>
 	<br>
