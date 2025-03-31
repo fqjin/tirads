@@ -86,11 +86,11 @@ async function parseText() {
 		}
 		match = regexBiopsy.exec(noduleData);
 		if (match) {
-			biopsy = match[1];
+			biopsy = match[1].trimEnd();
 			if (biopsy.slice(0,2) == "no") {
 				rec = getRecommendation(size, tirads);
 			} else if (biopsy.slice(0,3) == "yes") {
-				rec = `previously biopsied ${biopsy.slice(4)}. Follow up as clinically indicated`;
+				rec = `previously biopsied ${biopsy.slice(4).trimStart()}. Follow up as clinically indicated`;
 			} else {
 				rec = `previously biopsied ${biopsy}. Follow up as clinically indicated`;
 			}
