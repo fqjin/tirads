@@ -209,7 +209,7 @@ header h2 {
 }
 
 #impression {
-	white-space: pre-line;
+	white-space: pre-wrap;
 	color: #b5e853;
 }
 
