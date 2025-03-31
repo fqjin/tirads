@@ -87,7 +87,7 @@ async function parseText() {
 		match = regexBiopsy.exec(noduleData);
 		if (match) {
 			biopsy = match[1].trimEnd();
-			if (biopsy.slice(0,2) == "no") {
+			if (biopsy.slice(0,2) == "no" || biopsy.slice(0,7) == "unknown") {
 				rec = getRecommendation(size, tirads);
 			} else if (biopsy.slice(0,3) == "yes") {
 				rec = `previously biopsied ${biopsy.slice(4).trimStart()}. Follow up as clinically indicated`;
@@ -95,7 +95,7 @@ async function parseText() {
 				rec = `previously biopsied ${biopsy}. Follow up as clinically indicated`;
 			}
 		} else {
-			rec = "unknown biopsy";
+			rec = "missing prior biopsy info";
 		}
 		
 		results.push(`    Nodule ${noduleNumber}, ${loc}: ACR TI-RADS TR${tirads}. Size: ${size} cm. Recommend: ${rec}.\n`);
