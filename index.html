@@ -54,7 +54,7 @@ async function parseText() {
 	}
 	
 	const regexSize = /Size:\s*([\d.]+)\s*x\s*([\d.]+)\s*x\s*([\d.]+)\s*cm/;
-	const regexLoc = /Location:\s*(.+)(\bthyroid\b|\bisthmus\b)/;
+	const regexLoc = /Location:\s*(.+)(\bthyroid\b|\bisthmus\b)/i;
 	const regexTIRADS = /ACR TI-RADS category: TR(\d)/;
 	const regexBiopsy = /Prior biopsy:\s*(\S.+)\n/;
 	
@@ -74,7 +74,7 @@ async function parseText() {
 		}
 		match = regexLoc.exec(noduleData);
 		if (match) {
-			loc = match.slice(1).join("");
+			loc = match.slice(1).join("").trimStart();
 		} else {
 			loc = "unknown location";
 		}
