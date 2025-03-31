@@ -98,7 +98,7 @@ async function parseText() {
 			rec = "unknown biopsy";
 		}
 		
-		results.push(`Nodule ${noduleNumber}, ${loc}: ACR TI-RADS TR${tirads}. Size: ${size} cm. Recommend: ${rec}.\n`);
+		results.push(`    Nodule ${noduleNumber}, ${loc}: ACR TI-RADS TR${tirads}. Size: ${size} cm. Recommend: ${rec}.\n`);
 	}
 
 	results = results.join("\n");
