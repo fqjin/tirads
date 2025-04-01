@@ -54,9 +54,9 @@ async function parseText() {
 	}
 	
 	const regexSize = /Size:\s*([\d.]+)\s*x\s*([\d.]+)\s*x\s*([\d.]+)\s*cm/;
-	const regexLoc = /Location:\s*(.+)(\bthyroid\b|\bisthmus\b)/i;
+	const regexLoc = /Location:(.+)\n/;
 	const regexTIRADS = /ACR TI-RADS category: TR(\d)/;
-	const regexBiopsy = /Prior biopsy:\s*(\S.+)\n/;
+	const regexBiopsy = /Prior biopsy:(.+)\n/;
 	
 	let results = [];
 	results.push("TIRADS assessment of thyroid nodules:");
@@ -74,7 +74,10 @@ async function parseText() {
 		}
 		match = regexLoc.exec(noduleData);
 		if (match) {
-			loc = match.slice(1).join("").trimStart();
+			loc = match[1].trim().replace(/ +/g, ' ');
+			if (!loc.endsWith('.')) {
+				loc += '.';
+			}
 		} else {
 			loc = "unknown location";
 		}
@@ -86,7 +89,7 @@ async function parseText() {
 		}
 		match = regexBiopsy.exec(noduleData);
 		if (match) {
-			biopsy = match[1].trimEnd();
+			biopsy = match[1].trim().replace(/ +/g, ' ');
 			if (biopsy.slice(0,2) == "no" || biopsy.slice(0,7) == "unknown") {
 				rec = getRecommendation(size, tirads);
 			} else if (biopsy.slice(0,3) == "yes") {
@@ -98,7 +101,7 @@ async function parseText() {
 			rec = "missing prior biopsy info";
 		}
 		
-		results.push(`    Nodule ${noduleNumber}, ${loc}: ACR TI-RADS TR${tirads}. Size: ${size} cm. Recommend: ${rec}.\n`);
+		results.push(`    Nodule ${noduleNumber}, ${loc} ACR TI-RADS TR${tirads}. Size: ${size} cm. Recommend: ${rec}.\n`);
 	}
 
 	results = results.join("\n");
