@@ -35,9 +35,8 @@ async function parseText() {
 		}
 	}
 	inputText = inputText.replace(/\r\n/g, "\n");
-	
 	const idxStart = inputText.search(/Nodule\s*\d:/);
-	const idxEnd = inputText.search(/Lymph Nodes:/);
+	const idxEnd = inputText.search(/impression:/i);
 	if (idxStart == -1) {
 		document.getElementById("impression").innerText = "No nodules detected.";
 		tailShown = false;
@@ -223,7 +222,8 @@ Leaving this blank will pull from the clipboard" rows=15 cols=64></textarea>
 	<p>
 	The information provided on this site is intended for educational and informational purposes only and does not constitute providing medical advice or professional services.
 	No material on this site is intended to be a substitute for professional medical advice, diagnosis or treatment.
-	For questions or comments, please contact Felix Jin.
+	TI-RADS and logo are trademarks of the American College of Radiology (ACR).
+	This site is not associated with or endorsed by the ACR.
 	<a href="https://github.com/fqjin/tirads">Source</a>
 	</p>
 </footer>
